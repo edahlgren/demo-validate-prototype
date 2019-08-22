@@ -1,0 +1,92 @@
+# spec.yml: Description of fields in a demo.yml file
+
+# Reading this file:
+#
+#   + The 'doc' field:           Description of a field in a demo.yml file
+#
+#   + The 'constraints' field:   A list of constraints on a field. See about.md
+#                                for definitions of constraints
+#
+#   + The 'content' field:       Separates 'doc' and 'constraints' from real
+#                                fields in a demo.yml file. May not exist if
+#                                the content of a field is trivial (e.g. String)
+#                                or can be described by constraints (e.g. Array,
+#                                contains-String)
+
+title:
+  doc: A title for the demo
+  constraints:
+    - String
+    - non-empty
+
+run:
+  #   description        - Summary of what the demo does
+  #   configs            - Preconfigured scripts (to try out the demo)
+  #     - name
+  #       description
+  #       script
+  #   examples           - Command-line examples (for docs)
+  #     - description
+  #       args
+  doc: "The 'run' section - running the demo"
+  constraints:
+    - contains-Object
+    - non-empty
+
+  content:
+    # description:
+    description:
+      doc: Summary of what the demo does
+      constraints:
+        - String
+        - non-empty
+
+    # configs:
+    #   - name
+    #     description
+    #     script
+    configs:
+      doc: Preconfigured ways to run the demo
+      constraints:
+        - Array
+        - non-empty
+      content:
+        - name:
+            doc: Name of the configuration
+            constraints:
+              - String
+              - non-empty
+          description:
+            doc: Description of the configuration
+            constraints:
+              - String
+              - non-empty
+          script:
+            doc: Path to a script that will execute this configuration
+            constraints:
+              - String
+              - non-empty
+              - absolute-path
+
+    # examples:
+    #   - description
+    #     args
+    examples:
+      doc: Examples of command-line arguments
+      constraints:
+        - Array
+        - non-empty
+      content:
+        - description:
+            doc: Description of arguments
+            constraints:
+              - String
+              - non-empty
+          args:
+            doc: List of command-line arguments
+            constraints:
+              - Array
+              - non-empty
+              - contains-String
+    
+  

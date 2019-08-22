@@ -1,0 +1,154 @@
+# demo.yml: metadata for running, building, and documenting a demo
+
+# Scroll to the bottom of this file to learn about:
+#
+#  + the format of this file (YAML)
+#  + the "constraints:" comments
+#  + changing this file
+
+# ---------------------------------------------------------------------------
+
+# doc: The title of the demo
+# constraints:
+#   - String
+#   - non-empty
+title: Ant Colony Search
+
+# description: The 'run' section - running the demo
+# constraints: (see below)
+run:
+
+  # Overview
+  # 
+  #   description        - Summary of what the demo does
+  #   configs            - Preconfigured scripts (to try out the demo)
+  #     - name
+  #       description
+  #       script
+  #   examples           - Command-line examples (for docs)
+  #     - description
+  #       args
+
+  # description: Description of what the demo does when its run
+  # constraints:
+  #   - String
+  #   - non-empty
+  description: Solve the traveling salesman problem using artificial ants
+
+  # description: Collection opf preconfigured runs, encapsulated in scripts
+  # constraints:
+  #   - Array
+  #   - non-empty
+  configs:
+      # description: Name of the configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+    - name: djibouti
+      # description: Description of the configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+      description: Find the shortest roundtrip through the cities of Djibouti
+      # description:  Script to execute this configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+      #   - absolute-path
+      script: /demo/run/djibouti.sh
+      
+      # description: Name of the configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+    - name: qatar
+      # description: Description of the configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+      description: Find the shortest roundtrip through the cities of Qatar
+      # description:  Script to execute this configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+      #   - absolute-path
+      script: /demo/run/qatar.sh
+      
+      # description: Name of the configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+    - name: luxembourg
+      # description: Description of the configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+      description: Find the shortest roundtrip through the cities of Luxembourg
+      # description:  Script to execute this configuration
+      # constraints:
+      #   - String
+      #   - non-empty
+      #   - absolute-path
+      script: /demo/run/luxembourg.sh
+
+  # description: Examples of command-line arguments
+  # constraints: Array, non-empty
+  examples:
+      # description: Description of arguments
+      # constraints:
+      #   - string
+      #   - non-empty
+    - description: Use the Elitist Ant System algorithm to solve Djibouti
+      # description: Description of args
+      # constraints:
+      #   - array
+      #   - non-empty
+      #   - contains-strings
+      args:
+        - '--eas'
+        - '-i /root/data/djibouti/dj38.tsp'
+        
+      # description: Description of arguments
+      # constraints:
+      #   - string
+      #   - non-empty
+    - description: Spend 20 seconds solving Qatar
+      # description: Description of args
+      # constraints:
+      #   - array
+      #   - non-empty
+      #   - contains-strings
+      args:
+        - '--time 20'
+        - '-i /root/data/qatar/qa194.tsp'
+        
+      # description: Description of arguments
+      # constraints:
+      #   - string
+      #   - non-empty
+    - description: Use 100 ants to solve Djibouti
+      # description: Description of args
+      # constraints:
+      #   - array
+      #   - non-empty
+      #   - contains-strings
+      args:
+        - '--ants 100'
+        - '-i /root/data/djibouti/dj38.tsp'
+        
+      # description: Description of arguments
+      # constraints:
+      #   - string
+      #   - non-empty
+    - description: >-
+        Use the Basic Ant System and allow each ant to share information with
+        its nearest 40 neighbors to solve Luxembourg
+      # description: Description of args
+      # constraints:
+      #   - array
+      #   - non-empty
+      #   - contains-strings
+      args:
+        - '--as'
+        - '--nnants 40'
+        - '-i /root/data/luxembourg/lu980.tsp'
