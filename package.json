@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "command-line-args": "^5.1.1",
-    "js-yaml": "^3.13.1"
+    "js-yaml": "^3.13.1",
+    "log-symbols": "^3.0.0",
+    "traverse": "^0.6.6"
   }
 }

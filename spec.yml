@@ -30,7 +30,6 @@ run:
   #       args
   doc: "The 'run' section - running the demo"
   constraints:
-    - contains-Object
     - non-empty
 
   content:
@@ -51,23 +50,27 @@ run:
         - Array
         - non-empty
       content:
-        - name:
-            doc: Name of the configuration
-            constraints:
-              - String
-              - non-empty
-          description:
-            doc: Description of the configuration
-            constraints:
-              - String
-              - non-empty
-          script:
-            doc: Path to a script that will execute this configuration
-            constraints:
-              - String
-              - non-empty
-              - absolute-path
-
+        - doc: A scripted configuration
+          constraints:
+            - non-empty
+          content:
+            name:
+              doc: Name of the configuration
+              constraints:
+                - String
+                - non-empty
+            description:
+              doc: Description of the configuration
+              constraints:
+                - String
+                - non-empty
+            script:
+              doc: Path to a script that will execute this configuration
+              constraints:
+                - String
+                - non-empty
+                - absolute-path
+              
     # examples:
     #   - description
     #     args
@@ -77,16 +80,22 @@ run:
         - Array
         - non-empty
       content:
-        - description:
-            doc: Description of arguments
-            constraints:
-              - String
-              - non-empty
-          args:
-            doc: List of command-line arguments
-            constraints:
-              - Array
-              - non-empty
-              - contains-String
-    
-  
+        - doc: A command-line example
+          constraints:
+            - non-empty
+          content:
+            description:
+              doc: Description of arguments
+              constraints:
+                - String
+                - non-empty
+            args:
+              doc: List of command-line arguments
+              constraints:
+                - Array
+                - non-empty
+              content:
+                - doc: A command-line argument
+                  constraints:
+                    - String
+                    - non-empty
