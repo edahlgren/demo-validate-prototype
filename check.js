@@ -1,5 +1,11 @@
+const fsPath = require('path');
 const logSymbols = require('log-symbols');
+const util = require('util');
 const parse = require('./parse');
+
+const EXTRA_METADATA = 0;
+const REQUIRED_METADATA = 1;
+const CHECKED_VALUE = 2;
 
 function check(data, showProgress) {
     var issues = [];
@@ -72,10 +78,15 @@ function checkUnbound(data) {
     // Check for unbound metadata. It might be OK to have the extra
     // data but warn the user in case they intended it to be used.
     if (data.meta.unbound.length > 0) {
+        // msg: "Some of your metadata won't be used",
+        var extra_meta = [];
+        data.meta.unbound.forEach(function(path) {
+            meta_signatures.push(parse.joinPath(path));
+        });
         issues.push({
             warn: true,
-            msg: "Some of your metadata won't be used",
-            paths: data.unbound.meta
+            type: EXTRA_METADATA,
+            paths: extra_meta
         });
     }
 
@@ -100,10 +111,14 @@ function checkUnbound(data) {
         });
 
         if (required.length > 0) {
+            var required_meta = [];
+            required.forEach(function(spec_path) {
+                required_meta.push(parse.joinPath(parse.spec2meta(spec_path)));
+            });
             issues.push({
                 warn: false,
-                msg: "You're missing required fields",
-                paths: required
+                type: REQUIRED_METADATA,
+                paths: required_meta
             });
         }
     }
@@ -122,42 +137,26 @@ function checkValue(path, value, constraints, showProgress) {
         switch (constraint) {
         case "String":
             if (!isString(value))
-                issues.push({
-                    warn: false,
-                    msg: String.format("Field value must be a string"),
-                    paths: [path]
-                });
+                issues.push("Must be a string");
             break;
         case "Array":
             if (!isArray(value))
-                issues.push({
-                    warn: false,
-                    msg: String.format("Field value must be an array"),
-                    paths: [path]
-                });
+                issues.push("Must be an array");
             break;
         case "non-empty":
             if (!notEmpty(value))
-                issues.push({
-                    warn: false,
-                    msg: String.format("Field value can't be empty (e.g. \"\", [], {})"),
-                    paths: [path]
-                });
+                issues.push("Can't be empty (e.g. \"\", [], {})");
             break;
         case "absolute-path":
             if (!isAbsolutePath(value))
-                issues.push({
-                    warn: false,
-                    msg: String.format("Field value must be an absolute file path"),
-                    paths: [path]
-                });
+                issues.push("Must be an absolute file path");
             break;
         default:
             return {
                 ok: false,
                 buggy: false,
-                msg: String.format("unknown constraint \"{0}\". Avoid modifying the spec file",
-                                   constraint),
+                msg: util.format("unknown constraint \"%s\". Avoid modifying the spec file",
+                                 constraint),
                 issues: []
             };
         }
@@ -170,30 +169,71 @@ function checkValue(path, value, constraints, showProgress) {
             console.log(" ", logSymbols.success, parse.joinPath(path));
     }
 
+    var out = [];
+    if (issues.length > 0)
+        out = [{
+            warn: false,
+            type: CHECKED_VALUE,
+            path: parse.joinPath(path),
+            value: util.inspect(value, false, 0),
+            issues: issues
+        }];
+    
     return {
         ok: true,
         buggy: false,
         msg: "",
-        issues: issues
+        issues: out
     };
 }
 
 function isString(value) {
-    return true;
+    return (typeof value === 'string' || value instanceof String);
 }
 
 function isArray(value) {
-    return true;
+    return Array.isArray(value);
+}
+
+function isObject(value) {
+    return typeof value === 'object';
 }
 
 function notEmpty(value) {
+    if (isString(value)) {
+        return value !== "";
+    }
+    if (isArray(value)) {
+        return value.length > 0;
+    }
+    if (isObject(value)) {
+        if (value === null) {
+            return false;
+        }
+        for (var prop in value) {
+            if (value.hasOwnProperty(prop))
+                return true;
+        }
+        return false;
+    }
+
+    // For other types that can be represented as YAML,
+    // like numbers, we don't have a sense of emptiness,
+    // so just say that the value is not empty.
     return true;
 }
 
 function isAbsolutePath(value) {
-    return true;
+    try {
+        return fsPath.isAbsolute(value);
+    } catch (e) {
+        return false;
+    }
 }
 
 module.exports = {
-    check: check
+    check: check,
+    ISSUE_EXTRA_METADATA: EXTRA_METADATA,
+    ISSUE_REQUIRED_METADATA: REQUIRED_METADATA,
+    ISSUE_CHECKED_VALUE: CHECKED_VALUE
 };

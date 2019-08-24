@@ -1,6 +1,6 @@
 # spec.yml: Description of fields in a demo.yml file
 
-# Reading this file:
+# Fields:
 #
 #   + The 'doc' field:           Description of a field in a demo.yml file
 #
@@ -20,14 +20,6 @@ title:
     - non-empty
 
 run:
-  #   description        - Summary of what the demo does
-  #   configs            - Preconfigured scripts (to try out the demo)
-  #     - name
-  #       description
-  #       script
-  #   examples           - Command-line examples (for docs)
-  #     - description
-  #       args
   doc: "The 'run' section - running the demo"
   constraints:
     - non-empty

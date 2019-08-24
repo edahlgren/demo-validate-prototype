@@ -49,7 +49,7 @@ function parse(meta_file, spec_file, showProgress) {
             ok: false,
             buggy: false,
             data: undefined,
-            msg: String.format("failed to read {0} and load as YAML", meta_file)
+            msg: util.format("failed to read %s and load as YAML", meta_file)
         };
     }
     try {
@@ -59,7 +59,7 @@ function parse(meta_file, spec_file, showProgress) {
             ok: false,
             buggy: false,
             data: undefined,
-            msg: String.format("failed to read {0} and load as YAML", spec_file)
+            msg: util.format("failed to read %s and load as YAML", spec_file)
         };
     }
     if (showProgress)
@@ -77,7 +77,7 @@ function parse(meta_file, spec_file, showProgress) {
             ok: false,
             buggy: true,
             data: undefined,
-            msg: String.format("failed to traverse data in {0}", meta_file)
+            msg: util.format("failed to traverse data in %s", meta_file)
         };
     }
     try {
@@ -87,7 +87,7 @@ function parse(meta_file, spec_file, showProgress) {
             ok: false,
             buggy: true,
             data: undefined,
-            msg: String.format("failed to traverse data in {0}", spec_file)
+            msg: util.format("failed to traverse data in %s", spec_file)
         };
     }
     if (showProgress)
@@ -243,14 +243,14 @@ function lookup(data, path, hasConstraints) {
         return {
             ok: false,
             value: undefined,
-            bug: String.format("cannot find {0} in spec file", joinPath(path))
+            bug: util.format("cannot find %s in spec file", joinPath(path))
         };
     }
     if (hasConstraints && !result.value.hasOwnProperty("constraints")) {
         return {
             ok: false,
             value: undefined,
-            bug: String.format("{0} has no defined constraints", joinPath(path))
+            bug: util.format("%s has no defined constraints", joinPath(path))
         };
     }
     return {

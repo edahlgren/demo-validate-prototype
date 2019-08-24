@@ -70,7 +70,6 @@ function do_parse(meta_file, spec_file) {
         return undefined;
     }
 
-    console.log(logSymbols.success, "Parsing successful");
     return parse_result.data;
 }
 
@@ -100,25 +99,55 @@ function do_check(meta_file, data) {
     var issues = check_result.issues;
 
     if (issues.length == 0) {
+        console.log("");
         console.log(logSymbols.success, "All checks successful");
+        console.log("");
         return true;
     }
-    
-    console.log("\nDetails:\n");
+
+    console.log("\nChecks failed. Details:\n");
 
     issues.forEach(function(issue) {
-        if (issue.warn) {
-            console.log(" ", logSymbols.warn, issue.msg);
+        var symbol = logSymbols.error;
+        if (issue.warn)
+            symbol = logSymbols.warning;
+
+        switch (issue.type) {
+        case check.ISSUE_EXTRA_METADATA:
+            console.log(" ", symbol, "This data isn't recognized and won't be used:");
             issue.paths.forEach(function(path) {
-                console.log("  -", "(" + meta_file + ")" + parse.joinPath(path));
+                console.log("    -", parse.joinPath(path));
             });
-        } else {
-            console.log(" ", logSymbols.error, issue.msg);
+            break;
+            
+        case check.ISSUE_REQUIRED_METADATA:
+            console.log(" ", symbol, "These fields are required but weren't found:");
             issue.paths.forEach(function(path) {
-                console.log("  -", "(" + meta_file + ")" + parse.joinPath(path));
+                console.log("    -", parse.joinPath(path));
             });
+            break;
+            
+        case check.ISSUE_CHECKED_VALUE:
+            console.log(" ", symbol, issue.path, "\n");
+            console.log("    ", "value:", issue.value);
+            console.log("    ", "issues:");
+            issue.issues.forEach(function(subissue) {
+                console.log("        -", subissue);
+            });
+            break;
+
+        default:
+            console.log(logSymbols.error, "Internal error: parsing issues failed");
+            if (check_result.buggy) {
+                console.log("  This is likely a bug, so a report has been written to bug.log.");
+                console.log("  Please send a copy of this report to bugs@public-code.org.");
+            }
+            return false;
         }
+        console.log("");
+
     });
+    console.log("");
 
     return true;
 }
