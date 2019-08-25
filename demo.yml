@@ -295,7 +295,7 @@ source:
     directory: /root/src/acotsp
     entrypoint: acotsp.c
       
-    license: gpl.txt
+    license: /root/src/acotsp/gpl.txt
     authors:
       - Fred Astair
       - Ginger Rogers

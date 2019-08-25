@@ -13,10 +13,11 @@ const check = require('./check');
 
 const cliSpec = [
     { name: 'demofile' },
-    { name: 'specs', multiple: true }
+    { name: 'specs', multiple: true },
+    { name: 'verbose', alias: 'v', type: Boolean }
 ];
 
-const debug = false;
+var verbose = false;
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -34,12 +35,17 @@ function main() {
         console.log("Need a path to a spec.yml file (--spec)");
         process.exit(1);
     }
+    if (args.verbose) {
+        verbose = true;
+    }
 
     // Read the demofile as YAML
     var metaObj = read_yaml(args.demofile);
     if (!metaObj)
         process.exit(1);
 
+    console.log("");
+    
     // Parse and check the sections of demofile that correspond
     // to the given specs. This is fine for a prototype, but there should
     // be progress logs for each section, and details about all issues
@@ -61,11 +67,13 @@ function main() {
         var section = {};
         section[name] = metaObj[name];
 
+        console.log("[" + name + "]");
+
         // Parse the section
         var data = do_parse(section, spec);
         if (!data)
             process.exit(1);
-        
+
         // Check the section
         var ok = do_check(args.demofile, data);
         if (!ok)
@@ -93,8 +101,10 @@ function read_yaml(file) {
 
 function do_parse(meta_file, spec_file) {
 
-    console.log("\nParsing data and spec ...");
-    var parse_result = parse.parse(meta_file, spec_file, true /* show progress */);
+    if (verbose)
+        console.log("\nParsing data and spec ...");
+    
+    var parse_result = parse.parse(meta_file, spec_file, verbose /* show progress */);
     
     if (!parse_result.ok) {    
         console.log(logSymbols.error, "Unexpected error:", parse_result.msg);
@@ -119,8 +129,10 @@ function dump_bound_paths(data) {
 
 function do_check(meta_file, data) {
 
-    console.log("\nChecking", meta_file, "...");
-    var check_result = check.check(data, true /* show progress */);
+    if (verbose)
+        console.log("\nChecking", meta_file, "...");
+    
+    var check_result = check.check(data, verbose /* show progress */);
 
     if (!check_result.ok) {
         console.log(logSymbols.error, "Unexpected error:", check_result.msg);
@@ -151,14 +163,14 @@ function do_check(meta_file, data) {
         case check.ISSUE_EXTRA_METADATA:
             console.log(" ", symbol, "This data isn't recognized and won't be used:");
             issue.paths.forEach(function(path) {
-                console.log("    -", parse.joinPath(path));
+                console.log("    -", path);
             });
             break;
             
         case check.ISSUE_REQUIRED_METADATA:
             console.log(" ", symbol, "These fields are required but weren't found:");
             issue.paths.forEach(function(path) {
-                console.log("    -", parse.joinPath(path));
+                console.log("    -", path);
             });
             break;
             
@@ -182,7 +194,6 @@ function do_check(meta_file, data) {
         console.log("");
 
     });
-    console.log("");
 
     return true;
 }

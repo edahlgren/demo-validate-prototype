@@ -81,7 +81,7 @@ function checkUnbound(data) {
         // msg: "Some of your metadata won't be used",
         var extra_meta = [];
         data.meta.unbound.forEach(function(path) {
-            meta_signatures.push(parse.joinPath(path));
+            extra_meta.push(parse.joinPath(path));
         });
         issues.push({
             warn: true,

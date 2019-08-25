@@ -233,5 +233,6 @@ function lookup(data, path, hasConstraints) {
 module.exports = {
     parse: parse,
     joinPath: joinPath,
+    spec2meta: spec2meta,
     lookup: lookup
 };

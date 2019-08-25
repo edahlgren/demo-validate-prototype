@@ -27,63 +27,69 @@ args:
         - Array
         
       content:
-        description:
-          doc: A group of mutually exclusive commandline arguments
+        - doc: A group of mutually exclusive commandline arguments
           constraints:
-            - String
-            - non-empty
-            
-        required:
-          doc: Whether one of these options must be specified
-          constraints:
-            - Boolean
-            - non-empty
-            
-        choices:
-          doc: List of options
-          constraints:
-            - Array
             - non-empty
             
           content:
-            - doc: An option
+            description:
+              doc: Description of the options
               constraints:
+                - String
                 - non-empty
+            
+            required:
+              doc: Whether one of these options must be specified
+              constraints:
+                - Boolean
+                - non-empty
+            
+            choices:
+              doc: List of options
+              constraints:
+                - Array
+                - non-empty
+            
               content:
-                description:
-                  doc: A description of the option
+                - doc: An option
                   constraints:
-                    - String
                     - non-empty
-                flags:
-                  doc: Choose this option using one of these flags
-                  constraints:
-                    - Array
-                    - non-empty
-                    
+                  
                   content:
-                    - doc: A flag
+                    description:
+                      doc: A description of the option
                       constraints:
                         - String
                         - non-empty
-                default:
-                  doc: Whether or not this option is used by the default
-                  constraints:
-                    - Boolean
+                    flags:
+                      doc: Choose this option using one of these flags
+                      constraints:
+                        - Array
+                        - non-empty
+                      
+                      content:
+                        - doc: A flag
+                          constraints:
+                            - String
+                            - non-empty
+                    default:
+                      doc: Whether or not this option is used by the default
+                      constraints:
+                        - Boolean
     choose_any:
       doc: Use any of these commandline arguments
       constraints:
         - Array
         
       content:
-        - doc: List of commandline arguments
+        - doc: A commandline argument 
           constraints:
             - non-empty
             
           content:
             description:
               doc: Description of an option
-              constraint:
+              constraints:
                 - String
                 - non-empty
             flags:

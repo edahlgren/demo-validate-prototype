@@ -103,7 +103,7 @@ source:
                       constraints:
                         - String
                         - non-empty
-                        - absolute-path
+                        - relative-path
                       
             source:
               doc: Notable source files
@@ -126,7 +126,7 @@ source:
                       constraints:
                         - String
                         - non-empty
-                        - absolute-path
+                        - relative-path
                         
             build:
               doc: Notable build files and artifacts
@@ -149,4 +149,4 @@ source:
                       constraints:
                         - String
                         - non-empty
-                        - absolute-path
+                        - relative-path
