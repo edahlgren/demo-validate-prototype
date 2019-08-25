@@ -1,0 +1,152 @@
+# source_spec.yml: Description of the 'source' section in a demo.yml file
+
+# Fields:
+#
+#   + The 'doc' field:           Description of a field in a demo.yml file
+#
+#   + The 'constraints' field:   A list of constraints on a field. See about.md
+#                                for definitions of constraints
+#
+#   + The 'content' field:       Separates 'doc' and 'constraints' from real
+#                                fields in a demo.yml file. May not exist if
+#                                the content of a field is trivial (e.g. String)
+#                                or can be described by constraints (e.g. Array,
+#                                contains-String)
+
+source:
+  doc: "The 'source' section - source code repositories in the demo"
+  constraints:
+    - Array
+    - non-empty
+
+  content:
+    - doc: A source code repository
+      constraints:
+        - non-empty
+        
+      content:
+        name:
+          doc: Name of the repository
+          constraints:
+            - String
+            - non-empty
+            
+        description:
+          doc: Description of the repository
+          constraints:
+            - String
+            - non-empty
+            
+        version:
+          doc: Version number of the project, if defined
+          constraints:
+            - Number
+            
+        directory:
+          doc: Path to the repository
+          constraints:
+            - String
+            - non-empty
+            - absolute-path
+            
+        entrypoint:
+          doc: >-
+            Name of the file that contains the entrypoint, if the repository is
+            not a library with entrypoints in many files
+          constraints:
+            - String
+            - relative-path
+            
+        license:
+          doc: Path to a file containing the source code license
+          constraints:
+            - String
+            - non-empty
+            - absolute-path
+            
+        authors:
+          doc: List of the original authors of the source code (limit 10)
+          constraints:
+            - Array
+            - max-size-10
+            - non-empty
+          content:
+            - doc: An author
+              constraints:
+                - String
+                - non-empty
+                
+        notable:
+          doc: Notable files
+          constraints:
+            - non-empty
+            
+          content:
+            documentation:
+              doc: Notable documentation files
+              constraints:
+                - Array
+
+              content:
+                - doc: A file
+                  constraints:
+                    - non-empty
+                    
+                  content:
+                    description:
+                      doc: Description of the file
+                      constraints:
+                        - String
+                        - non-empty
+                    path:
+                      doc: Path to the file
+                      constraints:
+                        - String
+                        - non-empty
+                        - absolute-path
+                      
+            source:
+              doc: Notable source files
+              constraints:
+                - Array
+                 
+              content:
+                - doc: A source file
+                  constraints:
+                    - non-empty
+                    
+                  content:
+                    description:
+                      doc: Description of the file
+                      constraints:
+                        - String
+                        - non-empty
+                    path:
+                      doc: Path to the file
+                      constraints:
+                        - String
+                        - non-empty
+                        - absolute-path
+                        
+            build:
+              doc: Notable build files and artifacts
+              constraints:
+                - Array
+                
+              content:
+                - doc: A build file or build artifact
+                  constraints:
+                    - non-empty
+                    
+                  content:
+                    description:
+                      doc: Description of the file or artifact
+                      constraints:
+                        - String
+                        - non-empty
+                    path:
+                      doc: Path to the file or artifact
+                      constraints:
+                        - String
+                        - non-empty
+                        - absolute-path

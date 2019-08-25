@@ -1,4 +1,4 @@
-# title_spec.yml: Description of the 'title' section in a demo.yml file
+# io_spec.yml: Description of the 'io' section in a demo.yml file
 
 # Fields:
 #
@@ -13,81 +13,64 @@
 #                                or can be described by constraints (e.g. Array,
 #                                contains-String)
 
-title:
-  doc: A title for the demo
-  constraints:
-    - String
-    - non-empty
-
-run:
-  doc: "The 'run' section - running the demo"
+io:
+  doc: "The 'io' section - input and output of the demo"
   constraints:
     - non-empty
 
   content:
-    # description:
-    description:
-      doc: Summary of what the demo does
-      constraints:
-        - String
-        - non-empty
-
-    # configs:
-    #   - name
-    #     description
-    #     script
-    configs:
-      doc: Preconfigured ways to run the demo
+    input:
+      doc: Input files
       constraints:
         - Array
         - non-empty
       content:
-        - doc: A scripted configuration
+        - doc: An input file
           constraints:
             - non-empty
           content:
-            name:
-              doc: Name of the configuration
-              constraints:
-                - String
-                - non-empty
             description:
-              doc: Description of the configuration
+              doc: Description of the input file
               constraints:
                 - String
                 - non-empty
-            script:
-              doc: Path to a script that will execute this configuration
+            format:
+              doc: >-
+                "The input file's format (e.g. CSV). Use 'custom' if unknown"
+              constraints:
+                - String
+                - non-empty
+            example:
+              doc: Path to an example of this type of file
               constraints:
                 - String
                 - non-empty
                 - absolute-path
-              
-    # examples:
-    #   - description
-    #     args
-    examples:
-      doc: Examples of command-line arguments
+                
+    output:
+      doc: Output files
       constraints:
         - Array
         - non-empty
       content:
-        - doc: A command-line example
+        - doc: An output file
           constraints:
             - non-empty
           content:
             description:
-              doc: Description of arguments
+              doc: Description of the output file
               constraints:
                 - String
                 - non-empty
-            args:
-              doc: List of command-line arguments
+            format:
+              doc: >-
+                "The output file's format (e.g. CSV). Use 'custom' if unknown"
               constraints:
-                - Array
+                - String
                 - non-empty
-              content:
-                - doc: A command-line argument
-                  constraints:
-                    - String
-                    - non-empty
+            example:
+              doc: Path to an example of this type of file
+              constraints:
+                - String
+                - non-empty
+                - absolute-path

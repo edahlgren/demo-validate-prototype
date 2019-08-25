@@ -1,4 +1,4 @@
-# title_spec.yml: Description of the 'title' section in a demo.yml file
+# build_spec.yml: Description of the 'build' section in a demo.yml file
 
 # Fields:
 #
@@ -13,38 +13,31 @@
 #                                or can be described by constraints (e.g. Array,
 #                                contains-String)
 
-title:
-  doc: A title for the demo
-  constraints:
-    - String
-    - non-empty
-
-run:
-  doc: "The 'run' section - running the demo"
+build:
+  doc: "The 'build' section - build the demo"
   constraints:
     - non-empty
 
   content:
     # description:
-    description:
-      doc: Summary of what the demo does
+    clean:
+      doc: A path to a script that removes old build artifacts
       constraints:
         - String
         - non-empty
-
-    # configs:
-    #   - name
-    #     description
-    #     script
+        - absolute-path
+        
     configs:
-      doc: Preconfigured ways to run the demo
+      doc: Preconfigured ways to build the demo
       constraints:
         - Array
         - non-empty
+        
       content:
         - doc: A scripted configuration
           constraints:
             - non-empty
+            
           content:
             name:
               doc: Name of the configuration
@@ -62,32 +55,3 @@ run:
                 - String
                 - non-empty
                 - absolute-path
-              
-    # examples:
-    #   - description
-    #     args
-    examples:
-      doc: Examples of command-line arguments
-      constraints:
-        - Array
-        - non-empty
-      content:
-        - doc: A command-line example
-          constraints:
-            - non-empty
-          content:
-            description:
-              doc: Description of arguments
-              constraints:
-                - String
-                - non-empty
-            args:
-              doc: List of command-line arguments
-              constraints:
-                - Array
-                - non-empty
-              content:
-                - doc: A command-line argument
-                  constraints:
-                    - String
-                    - non-empty

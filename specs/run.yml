@@ -1,4 +1,4 @@
-# title_spec.yml: Description of the 'title' section in a demo.yml file
+# run_spec.yml: Description of the 'run' section in a demo.yml file
 
 # Fields:
 #
@@ -12,12 +12,6 @@
 #                                the content of a field is trivial (e.g. String)
 #                                or can be described by constraints (e.g. Array,
 #                                contains-String)
-
-title:
-  doc: A title for the demo
-  constraints:
-    - String
-    - non-empty
 
 run:
   doc: "The 'run' section - running the demo"
@@ -41,10 +35,12 @@ run:
       constraints:
         - Array
         - non-empty
+        
       content:
         - doc: A scripted configuration
           constraints:
             - non-empty
+            
           content:
             name:
               doc: Name of the configuration

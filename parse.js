@@ -1,17 +1,15 @@
-const yaml = require('js-yaml');
-const fs   = require('fs');
 const logSymbols = require('log-symbols');
 const traverse = require('traverse');
 const util = require('util');
 
-function parse(meta_file, spec_file, showProgress) {
-    // Data parsed from meta_file and spec_file
+function parse(metaObj, specObj, showProgress) {
+    // Data parsed from metaObj and specObj
     var data = {
 
         // Data about meta_file
         meta: {
             // YAML-based javascript obj
-            obj: {},
+            obj: metaObj,
             // Paths to fields in obj
             paths: [],
             // Mapping of metadata paths to spec paths
@@ -23,7 +21,7 @@ function parse(meta_file, spec_file, showProgress) {
         // Data about spec_file
         spec: {
             // YAML-based javascript obj
-            obj: {},
+            obj: specObj,
             // Paths to fields in obj
             paths: [],
             // Mapping of spec paths to metadata paths
@@ -36,34 +34,6 @@ function parse(meta_file, spec_file, showProgress) {
         // to spec signatures
         signatures: new Map()
     };
-
-    
-    /////////////////////////////////////////////////////////////////////////////////
-
-    
-    // Parse YAML files
-    try {
-        data.meta.obj = yaml.safeLoad(fs.readFileSync(meta_file, 'utf8'));
-    } catch (e) {
-        return {
-            ok: false,
-            buggy: false,
-            data: undefined,
-            msg: util.format("failed to read %s and load as YAML", meta_file)
-        };
-    }
-    try {
-        data.spec.obj = yaml.safeLoad(fs.readFileSync(spec_file, 'utf8'));
-    } catch (e) {
-        return {
-            ok: false,
-            buggy: false,
-            data: undefined,
-            msg: util.format("failed to read %s and load as YAML", spec_file)
-        };
-    }
-    if (showProgress)
-        console.log(" ", logSymbols.success, "Read YAML");
 
     
     /////////////////////////////////////////////////////////////////////////////////

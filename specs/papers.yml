@@ -1,0 +1,59 @@
+# papers_spec.yml: Description of the 'papers' section in a demo.yml file
+
+# Fields:
+#
+#   + The 'doc' field:           Description of a field in a demo.yml file
+#
+#   + The 'constraints' field:   A list of constraints on a field. See about.md
+#                                for definitions of constraints
+#
+#   + The 'content' field:       Separates 'doc' and 'constraints' from real
+#                                fields in a demo.yml file. May not exist if
+#                                the content of a field is trivial (e.g. String)
+#                                or can be described by constraints (e.g. Array,
+#                                contains-String)
+
+papers:
+  doc: "The 'papers' section - published papers that describe demo functionality"
+  constraints:
+    - Array
+    
+  content:
+    - doc: A published paper
+      constraints:
+        - non-empty
+        
+      content:
+        path:
+          doc: Path to the published paper
+          constraints:
+            - String
+            - non-empty
+            - absolute-path
+        year_published:
+          doc: Year the paper was published
+          constraints:
+            - Number
+            - non-empty
+        authors:
+          doc: List of authors of the paper
+          constraints:
+            - Array
+            - non-empty
+            
+          content:
+            - doc: Author full name
+              constraints:
+                - String
+                - non-empty
+        keywords:
+          doc: List of main concepts that this paper describes
+          constraints:
+            - Array
+            - non-empty
+            
+          content:
+            - doc: Main concept as a phrase or keyword
+              constraints:
+                - String
+                - non-empty

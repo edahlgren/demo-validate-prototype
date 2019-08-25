@@ -1,0 +1,91 @@
+# data_spec.yml: Description of the 'data' section in a demo.yml file
+
+# Fields:
+#
+#   + The 'doc' field:           Description of a field in a demo.yml file
+#
+#   + The 'constraints' field:   A list of constraints on a field. See about.md
+#                                for definitions of constraints
+#
+#   + The 'content' field:       Separates 'doc' and 'constraints' from real
+#                                fields in a demo.yml file. May not exist if
+#                                the content of a field is trivial (e.g. String)
+#                                or can be described by constraints (e.g. Array,
+#                                contains-String)
+
+data:
+  doc: "The 'data' section - packaged data sets"
+  constraints:
+    - Array
+    - non-empty
+
+  content:
+    - doc: A dataset
+      constraints:
+        - non-empty
+        
+      content:
+        title:
+          doc: Title or short description of the dataset
+          constraints:
+            - String
+            - non-empty
+        description:
+          doc: Longer description of the data
+          constraints:
+            - String
+            - non-empty
+        source:
+          doc: Where the dataset comes from (e.g. an institution, a website)
+          constraints:
+            - String
+            - non-empty
+        url:
+          doc: Where the dataset can be found online
+          constraints:
+            - String
+            - url-path
+        files:
+          doc: Files from the dataset in the demo
+          constraints:
+            - Array
+            - non-empty
+            
+          content:
+            - doc: A file
+              constraints:
+                - non-empty
+                
+              content:
+                description:
+                  doc: Description of the file
+                  constraints:
+                    - String
+                    - non-empty
+                path:
+                  doc: Path to the file
+                  constraints:
+                    - String
+                    - non-empty
+                    - absolute-path
+                metadata:
+                  doc: Facts about the file
+                  constraints:
+                    - Array
+                    
+                  content:
+                    - doc: Statistics about the file
+                      constraints:
+                        - non-empty
+                        
+                      content:
+                        description:
+                          doc: Description of the statistic
+                          constraints:
+                            - String
+                            - non-empty
+                        data:
+                          doc: The statistic
+                          constraints:
+                            - Number
+                            - non-empty

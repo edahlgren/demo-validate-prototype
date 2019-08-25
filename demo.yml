@@ -46,3 +46,312 @@ run:
         - '--as'
         - '--nnants 40'
         - '-i /root/data/luxembourg/lu980.tsp'
+
+io:
+  input:
+    - description: Contains points and distances between points
+      format: TSPLIB
+      example: /root/data/djibouti/dj38.tsp
+      
+  output:
+    - description: Contains statistics about the best solutions found
+      format: custom
+      example: /root/run/expected/best.dj38
+      
+    - description: Contains comparative statistics about all trial runs
+      format: custom
+      example: /root/run/expected/cmp.dj38
+
+    - description: Internal, unlabeled statistics
+      format: CSV
+      example: /root/run/expected/stat.dj38
+
+args:
+  choose_one:    
+    - description: Type of artificial ant colony to use
+      required: false
+      choices:
+        - description: MAX-MIN Ant System
+          flags:
+            - "--mmas"
+            - "-x"
+          default: true
+
+        - description: Basic Ant System
+          flags:
+            - "--as"
+            - "-u"
+          default: false
+            
+        - description: Elitist Ant System
+          flags:
+            - "--eas"
+            - "-v"
+          default: false
+
+        - description: Rank-based Ant System
+          flags:
+            - "--ras"
+            - "-w"
+          default: false
+          
+        - description: Ant Colony System
+          flags:
+            - "--acs"
+            - "-z"
+          default: false
+
+        - description: Best-worst Ant System
+          flags:
+            - "--bwas"
+            - "-y"
+          default: false
+          
+  choose_any:
+    - description: >-
+        Path to a TSPLIB formatted file containing a graph of points and
+        distances between points
+      flags:
+        - "--tsplibfile"
+        - "-i"
+      required: true
+      example: "-i /root/data/djibouti/dj38.tsp"
+
+    - description: Number of independent trials
+      flags:
+        - "--tries"
+        - "-r"
+      required: false
+      default: 10
+
+    - description: Number of steps in each trial
+      flags:
+        - "--tours"
+        - "-s"
+      required: false
+      default: 0
+
+    - description: Maximum time for each trial in seconds
+      flags:
+        - "--time"
+        - "-t"
+      required: false
+      default: 10
+
+    - description: Seed for the internal random number generator
+      flags:
+        - "--seed"
+      required: false
+      default: "(current time)"
+      example: "--seed 123456789"
+
+    - description: >-
+        Stop if solution is better or equal to this number (lower is better)
+      flags:
+        - "--optimum"
+        - "-o"
+      required: false
+      default: 1
+
+    - description: Number of ants (i.e. colony size)
+      flags:
+        - "--ants"
+        - "-m"
+      required: false
+      default: 25
+
+    - description: Number of ants in a neighborhood
+      flags:
+        - "--nnants"
+        - "-g"
+      required: false
+      default: 20
+
+    - description: Influence of pheromone trails
+      flags:
+        - "--alpha"
+        - "-a"
+      required: false
+      default: 1.0
+
+    - description: Influence of heuristic information
+      flags:
+        - "--beta"
+        - "-b"
+      required: false
+      default: 2.0
+
+    - description: Pheromone trail evaporation rate
+      flags:
+        - "--rho"
+        - "-e"
+      required: false
+      default: 0.5
+
+    - description: Probability of finding the best solution
+      flags:
+        - "--q0"
+        - "-q"
+      required: false
+      default: 0.0
+
+    - description: Number of elitist ants (with --eas only)
+      flags:
+        - "--elitistants"
+        - "-c"
+      required: false
+      default: 0
+
+    - description: Number of ranks (with --ras only)
+      flags:
+        - "--rasranks"
+        - "-f"
+      required: false
+      default: 0
+
+    - description: Configure local search
+      flags:
+        - "--localsearch"
+        - "-l"
+      required: false
+      default: 3
+
+    - description: Number of ants in a neighborhood for local search
+      flags:
+        - "--nnls"
+        - "-k"
+      required: false
+      default: 20
+
+    - description: "Use don't look bits in local search"
+      flags:
+        - "--dlb"
+        - "-d"
+      required: false
+      default: true
+
+    - description: Reduce output to a minimum
+      flags:
+        - "--quiet"
+      required: false
+      default: false
+      
+build:  
+  clean: /demo/build/clean.sh
+  
+  configs:
+    - name: default
+      description: Build the demo with gcc
+      script: /demo/build/default.sh
+      
+    - name: optimized
+      description: Build like default at optimization level 3
+      script: /demo/build/optimized.sh
+
+    - name: debug
+      description: Build like default and include debug symbols
+      script: /demo/build/optimized.sh
+      
+data:
+  - title: National Traveling Salesman Problem Dataset
+    description: >-
+      TSPLIB formatted files containing the cities of countries from around
+      the world
+    source: University of Waterloo
+    url: "http://www.math.uwaterloo.ca/tsp/world/countries.html"
+    
+    files:
+      - description: TSPLIB file containing the cities of Djibouti (Africa)
+        path: /root/data/djibouti/dj38.tsp
+        metadata:
+          - description: Number of cities
+            data: 38
+          - description: Optimal tour length
+            data: 6656
+            
+      - description: TSPLIB file containing the cities of Qatar (Middle East)
+        path: /root/data/qatar/qa194.tsp
+        metadata:
+          - description: Number of cities
+            data: 194
+          - description: Optimal tour length
+            data: 9352
+
+      - description: TSPLIB file containing the cities of Luxembourg (Europe)
+        path: /root/data/luxembourg/lu980.tsp
+        metadata:
+          - description: Number of cities
+            data: 980
+          - description: Optimal tour length
+            data: 11340
+            
+source:
+  - name: acotsp
+    description: >-
+      Implements 6 types of artificial ant colonies that are capable of solving
+      traveling salesman style problems
+    version: 1.03
+      
+    directory: /root/src/acotsp
+    entrypoint: acotsp.c
+      
+    license: gpl.txt
+    authors:
+      - Fred Astair
+      - Ginger Rogers
+      
+    notable:
+      documentation:
+        - description: Contains a high-level documentation and instructions
+          path: README
+          
+      source:
+        - description: Parses commandline arguments
+          path: parse.c
+          
+        - description: Initializes the ant colony
+          path: InOut.c
+        
+        - description: Implements ant searching
+          path: acotsp.c
+          
+      build:
+        - description: Contains commands for building the acotsp binary
+          path: Makefile
+          
+        - description: The acotsp binary, the output of a successful build
+          path: acotsp
+
+papers:
+  - path: /docs/papers/AntSystem.pdf
+    year_published: 1999
+    authors:
+      - Fred Astair
+      - Ginger Rogers
+    keywords:
+      - Basic Ant System
+      - Elitist Ant System
+
+  - path: /docs/papers/RankBased.pdf
+    year_published: 1999
+    authors:
+      - Fred Astair
+      - Ginger Rogers
+    keywords:
+      - Rank-based Ant System
+
+  - path: /docs/papers/AntColonySystem.pdf
+    year_published: 1999
+    authors:
+      - Fred Astair
+      - Ginger Rogers
+    keywords:
+      - Ant Colony System
+
+  - path: /docs/papers/BestWorst.pdf
+    year_published: 1999
+    authors:
+      - Fred Astair
+      - Ginger Rogers
+    keywords:
+      - Best-Worst Ant System 

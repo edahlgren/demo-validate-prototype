@@ -1,0 +1,116 @@
+# args_spec.yml: Description of the 'args' section in a demo.yml file
+
+# Fields:
+#
+#   + The 'doc' field:           Description of a field in a demo.yml file
+#
+#   + The 'constraints' field:   A list of constraints on a field. See about.md
+#                                for definitions of constraints
+#
+#   + The 'content' field:       Separates 'doc' and 'constraints' from real
+#                                fields in a demo.yml file. May not exist if
+#                                the content of a field is trivial (e.g. String)
+#                                or can be described by constraints (e.g. Array,
+#                                contains-String)
+
+args:
+  doc: "The 'args' section - commandline args of the demo"
+  constraints:
+    - non-empty
+
+  content:
+    choose_one:
+      doc: >-
+        Groups of arguments, where you can only choose one commandline
+        argument in the group
+      constraints:
+        - Array
+        
+      content:
+        description:
+          doc: A group of mutually exclusive commandline arguments
+          constraints:
+            - String
+            - non-empty
+            
+        required:
+          doc: Whether one of these options must be specified
+          constraints:
+            - Boolean
+            - non-empty
+            
+        choices:
+          doc: List of options
+          constraints:
+            - Array
+            - non-empty
+            
+          content:
+            - doc: An option
+              constraints:
+                - non-empty
+              content:
+                description:
+                  doc: A description of the option
+                  constraints:
+                    - String
+                    - non-empty
+                flags:
+                  doc: Choose this option using one of these flags
+                  constraints:
+                    - Array
+                    - non-empty
+                    
+                  content:
+                    - doc: A flag
+                      constraints:
+                        - String
+                        - non-empty
+                default:
+                  doc: Whether or not this option is used by the default
+                  constraints:
+                    - Boolean
+    choose_any:
+      doc: Use any of these commandline arguments
+      constraints:
+        - Array
+        
+      content:
+        - doc: List of commandline arguments
+          constraints:
+            - non-empty
+            
+          content:
+            description:
+              doc: Description of an option
+              constraint:
+                - String
+                - non-empty
+            flags:
+              doc: Choose this option using one of these flags
+              constraints:
+                - Array
+                - non-empty
+                
+              content:
+                - doc: A flag
+                  constraints:
+                    - String
+                    - non-empty
+            required:
+              doc: Whether this option must be specified
+              constraints:
+                - Boolean
+                - non-empty
+                
+            default:
+              doc: The default value of this option
+              constraints:
+                - none
+                
+            example:
+              doc: An example of this option with a value
+              constraints:
+                - String
+
+      

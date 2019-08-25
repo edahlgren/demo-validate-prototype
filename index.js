@@ -4,13 +4,16 @@
 
 
 const cli = require('command-line-args');
+const yaml = require('js-yaml');
+const fs   = require('fs');
+
 const logSymbols = require('log-symbols');
 const parse = require('./parse');
 const check = require('./check');
 
 const cliSpec = [
     { name: 'demofile' },
-    { name: 'spec' }
+    { name: 'specs', multiple: true }
 ];
 
 const debug = false;
@@ -27,24 +30,47 @@ function main() {
         console.log("Need a path to a demo.yml file (--demofile)");
         process.exit(1);
     }
-    if (!args.spec) {
+    if (!args.specs) {
         console.log("Need a path to a spec.yml file (--spec)");
         process.exit(1);
     }
 
-    // Parse YAML files
-    var data = do_parse(args.demofile, args.spec);
-    if (!data)
+    // Read the demofile as YAML
+    var metaObj = read_yaml(args.demofile);
+    if (!metaObj)
         process.exit(1);
 
-    // Dump a mapping for debugging purposes
-    if (debug)
-        dump_bound_paths(data);
-    
-    // Check the data
-    var ok = do_check(args.demofile, data);
-    if (!ok)
-        process.exit(1);
+    // Parse and check the sections of demofile that correspond
+    // to the given specs. This is fine for a prototype, but there should
+    // be progress logs for each section, and details about all issues
+    // at the end, so no early exiting.
+    args.specs.forEach(function(spec_file) {
+        // Read the spec
+        var spec = read_yaml(spec_file);
+        if (!spec)
+            process.exit(1);
+
+        // Check that demofile defines the section defined by this spec
+        var name = Object.keys(spec)[0];
+        if (!metaObj.hasOwnProperty(name)) {
+            console.log(logSymbols.error, "Missing section '" + name + "', can't validate");
+            process.exit(1);
+        }
+
+        // Create an object to mirror the one in the spec
+        var section = {};
+        section[name] = metaObj[name];
+
+        // Parse the section
+        var data = do_parse(section, spec);
+        if (!data)
+            process.exit(1);
+        
+        // Check the section
+        var ok = do_check(args.demofile, data);
+        if (!ok)
+            process.exit(1);
+    });
     
     process.exit(0);
 }
@@ -55,6 +81,15 @@ main();
 
 /////////////////////////////////////////////////////////////////////////////////
 
+
+function read_yaml(file) {
+    try {
+        return yaml.safeLoad(fs.readFileSync(file, 'utf8'));
+    } catch (e) {
+        console.error("failed to read", file, " as YAML");
+        return undefined;
+    }
+}
 
 function do_parse(meta_file, spec_file) {
 
